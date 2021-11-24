@@ -1,0 +1,17 @@
+spring:
+  # 数据源配置@Apollo
+  datasource:
+    username: xs_cc
+    password: xs_cc
+    url: jdbc:oracle:thin:@10.100.2.79:1521:ifp
+    driver-class-name: oracle.jdbc.OracleDriver
+
+
+server:
+  # 服务端口
+  port: 7002
+
+
+mybatis:
+  type-aliases-package: com.example.wyexercise.business
+  mapper-locations: classpath:mapper/*.xml
