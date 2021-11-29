@@ -9,9 +9,13 @@ spring:
 
 server:
   # 服务端口
-  port: 7002
+  port: 7003
 
 
 mybatis:
   type-aliases-package: com.example.wyexercise.business
   mapper-locations: classpath:mapper/*.xml
+
+cc:
+  batch:
+    sendPath: D:/template/template.xls
