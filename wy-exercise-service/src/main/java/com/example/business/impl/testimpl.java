@@ -5,6 +5,7 @@ package com.example.business.impl;
 import com.example.business.Itest;
 import com.example.business.mapper.CcCouponTypeDao;
 import com.example.business.model.CouponFileSendModel;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -40,9 +41,11 @@ public class testimpl implements Itest {
         return list;
     }
 
-    public int fileCount() {
-        int count = fileUtil.countFileRow(filePath);
+    public Response fileCount()  {
+        long count = 0;
+        Response response = new Response();
+        response = fileUtil.countFileRowXslx(filePath);
         System.out.println(count);
-        return count;
+        return response;
     }
 }

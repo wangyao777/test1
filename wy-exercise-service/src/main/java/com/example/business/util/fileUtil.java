@@ -5,6 +5,7 @@ import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
+import org.apache.coyote.Response;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -20,9 +21,14 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class fileUtil {
+
+    //校验手机号格式正则表达式
+    private final static String regex = "^((13[0-9])|(14[5,7,9])|(15([0-3]|[5-9]))|(16[5,6])|(17[0-8])|(18[0-9])|(19[1、5、8、9]))\\d{8}$";
 
     public List<CouponFileSendModel> fileContent(String filePath) {
         CouponFileSendModel couponFileSendModel = new CouponFileSendModel();
@@ -77,8 +83,9 @@ public class fileUtil {
     return  row;
     }
 
-    public int countFileRowXslx(String filePath) {
+    public Response countFileRowXslx(String filePath) {
         int rowNum =0;
+        Response response = new Response();
         try {
             FileInputStream fis = new FileInputStream(new File(filePath));
             //解析excel
@@ -86,14 +93,37 @@ public class fileUtil {
             //获取整个excel
             HSSFWorkbook hb = null;
             hb = new HSSFWorkbook(pSystem);
-            System.out.println(hb.getNumCellStyles());
+            /*System.out.println(hb.getNumCellStyles());*/
             //获取第一个表单sheet
             HSSFSheet sheet = hb.getSheetAt(0);
             rowNum = sheet.getLastRowNum();
+            //获取第二行
+            int secondRow = sheet.getFirstRowNum()+1;
+            //增加表格样式校验
+            for (int i = secondRow; i < sheet.getLastRowNum()+1 ;i++){
+                HSSFRow row = sheet.getRow(i);
+                org.apache.poi.ss.usermodel.Cell cell = row.getCell(row.getLastCellNum()-1);
+                if (!(cell != null && cell.getCellType() != CellType.BLANK)) {
+                    rowNum--;
+                }else {
+                    String value = getCellValue(cell);
+                    //String regex = "^((13[0-9])|(14[5,7,9])|(15([0-3]|[5-9]))|(16[5,6])|(17[0-8])|(18[0-9])|(19[1、5、8、9]))\\d{8}$";
+                    Pattern p = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+                    Matcher m = p.matcher(value);
+                    if(!(m.matches()&&value.length()==11)){
+                        response.setMessage("第"+(i+1)+"行手机号不匹配！");
+                        //throw new RuntimeException("第"+(i+1)+"行手机号不匹配！");
+                        return response;
+                    }
+                }
+            }
+           response.setMessage(String.valueOf(rowNum));
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e.getMessage());
         }
-        return rowNum ;
+        return response ;
     }
     public List<CouponFileSendModel> fileContentXslx(String filePath) {
         List<CouponFileSendModel> list=new ArrayList<CouponFileSendModel>();
@@ -146,7 +176,7 @@ public class fileUtil {
         }
         DecimalFormat decimalFormat = new DecimalFormat("#");
         //根据自己的情况进行类型添加
-        switch (cell.getCellTypeEnum()) {
+        switch (cell.getCellType()) {
             case NUMERIC:
                 cellValue=decimalFormat.format(cell.getNumericCellValue()).toString().trim();
                 break;

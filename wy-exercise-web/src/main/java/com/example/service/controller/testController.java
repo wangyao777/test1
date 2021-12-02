@@ -3,6 +3,7 @@ package com.example.service.controller;
 
 import com.example.business.Itest;
 import com.example.business.model.CouponFileSendModel;
+import org.apache.coyote.Response;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,9 +34,13 @@ public class testController {
         return i;
     }
     @PostMapping("/fileCount")
-    public int fileCount(){
+    public Map fileCount() {
         List list = new ArrayList();
-        int i = testimpl.fileCount();
-        return i;
+        Response response = new Response();
+        long i = 0;
+        response = testimpl.fileCount();
+        Map map = new HashMap();
+        map.put("message",response.getMessage());
+        return map;
     }
 }

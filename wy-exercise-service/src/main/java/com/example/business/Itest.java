@@ -1,5 +1,6 @@
 package com.example.business;
 
+import org.apache.coyote.Response;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -11,5 +12,5 @@ public interface Itest {
 
     List fileRead();
 
-    int fileCount();
+    Response fileCount();
 }
