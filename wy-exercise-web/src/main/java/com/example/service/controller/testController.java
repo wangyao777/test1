@@ -43,4 +43,23 @@ public class testController {
         map.put("message",response.getMessage());
         return map;
     }
+    @PostMapping("/redisTest")
+    public Map redisTest() {
+        //List list = new ArrayList();
+        //Map map = new HashMap();
+        long i = 0;
+        Map map = testimpl.redisTest();
+        return map;
+    }
+
+    @PostMapping("/testDemo")
+    public void testDemo() {
+        //List list = new ArrayList();
+        //Map map = new HashMap();
+        /*long i = 0;*/
+        CouponFileSendModel couponFileSendModel = new CouponFileSendModel();
+        couponFileSendModel.setPhone("11111111111");
+        testimpl.testDemo(couponFileSendModel);
+        /*return map;*/
+    }
 }

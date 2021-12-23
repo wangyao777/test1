@@ -3,7 +3,7 @@
 <mapper namespace="com.example.business.mapper.CcCouponTypeDao">
 
     <select id="selectCouponCheck" parameterType="java.util.Map" resultType="java.lang.String">
-        SELECT COUPON_TYPE FROM CC_COUPON_TYPE
+        SELECT COUPON_TYPE FROM cc_coupon_type
         WHERE COUPON_TYPE = #{couponType,jdbcType=VARCHAR}
         AND COUPON_CLASS = #{couponClass,jdbcType=VARCHAR}
     </select>

@@ -100,20 +100,24 @@ public class fileUtil {
             //获取第二行
             int secondRow = sheet.getFirstRowNum()+1;
             //增加表格样式校验
-            for (int i = secondRow; i < sheet.getLastRowNum()+1 ;i++){
+            for (int i = 2996; i < sheet.getLastRowNum()+1 ;i++){
                 HSSFRow row = sheet.getRow(i);
-                org.apache.poi.ss.usermodel.Cell cell = row.getCell(row.getLastCellNum()-1);
-                if (!(cell != null && cell.getCellType() != CellType.BLANK)) {
+                if (row == null){
                     rowNum--;
                 }else {
-                    String value = getCellValue(cell);
-                    //String regex = "^((13[0-9])|(14[5,7,9])|(15([0-3]|[5-9]))|(16[5,6])|(17[0-8])|(18[0-9])|(19[1、5、8、9]))\\d{8}$";
-                    Pattern p = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
-                    Matcher m = p.matcher(value);
-                    if(!(m.matches()&&value.length()==11)){
-                        response.setMessage("第"+(i+1)+"行手机号不匹配！");
-                        //throw new RuntimeException("第"+(i+1)+"行手机号不匹配！");
-                        return response;
+                    org.apache.poi.ss.usermodel.Cell cell = row.getCell(row.getLastCellNum() - 1);
+                    if (!(cell != null && cell.getCellType() != CellType.BLANK)) {
+                        rowNum--;
+                    } else {
+                        String value = getCellValue(cell);
+                        //String regex = "^((13[0-9])|(14[5,7,9])|(15([0-3]|[5-9]))|(16[5,6])|(17[0-8])|(18[0-9])|(19[1、5、8、9]))\\d{8}$";
+                        Pattern p = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+                        Matcher m = p.matcher(value);
+                        if (!(m.matches() && value.length() == 11)) {
+                            response.setMessage("第" + (i + 1) + "行手机号不匹配！");
+                            //throw new RuntimeException("第"+(i+1)+"行手机号不匹配！");
+                            return response;
+                        }
                     }
                 }
             }
